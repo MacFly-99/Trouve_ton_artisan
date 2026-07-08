@@ -1,12 +1,13 @@
 -- =============================================
 -- ALIMENTATION DE LA BASE DE DONNÉES
+-- AVEC LES DONNÉES FOURNIES
 -- =============================================
 USE trouve_ton_artisan;
 
 -- =============================================
 -- 1. Insertion des CATÉGORIES (4 catégories)
 -- =============================================
-INSERT INTO categories (name, description) VALUES
+INSERT INTO categories (nom, description) VALUES
 ('Alimentation', 'Artisans de l''alimentation, gastronomie et bouche'),
 ('Bâtiment', 'Artisans du bâtiment, construction et rénovation'),
 ('Fabrication', 'Artisans fabricants, créateurs et artisans d''art'),
@@ -15,7 +16,7 @@ INSERT INTO categories (name, description) VALUES
 -- =============================================
 -- 2. Insertion des SPÉCIALITÉS
 -- =============================================
-INSERT INTO specialites (name, description, categorie_id) VALUES
+INSERT INTO specialties (nom, description, categorie_id) VALUES
 -- Alimentation (catégorie 1)
 ('Boucher', 'Boucherie artisanale, viandes et charcuterie', 1),
 ('Boulanger', 'Boulangerie, pâtisserie artisanale', 1),
@@ -44,7 +45,7 @@ INSERT INTO specialites (name, description, categorie_id) VALUES
 -- =============================================
 
 -- ALIMENTATION (catégorie 1)
-INSERT INTO artisans (name, company_name, email, phone, website, address, city, postal_code, rating, description, image_url, specialite_id, is_featured) VALUES
+INSERT INTO artisans (nom, nom_entreprise, email, telephone, site_web, adresse, ville, code_postal, note, description, url_image, specialite_id, est_vedette) VALUES
 ('Boucherie Dumont', 'Boucherie Dumont', 'boucherie.dumond@gmail.com', '04 75 00 00 01', NULL, '1 Rue de la Boucherie', 'Lyon', '69001', 4.5, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eleifec', '/images/artisans/boucherie-dumont.jpg', 1, FALSE),
 
 ('Au pain chaud', 'Boulangerie Au Pain Chaud', 'aupainchaud@hotmail.com', '04 75 00 00 02', NULL, '2 Rue des Bakers', 'Montélimar', '26200', 4.8, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eleifec', '/images/artisans/au-pain-chaud.jpg', 2, TRUE),
@@ -94,26 +95,26 @@ INSERT INTO api_users (username, api_key) VALUES
 SELECT 
     'Vérification des données' as 'Statut',
     (SELECT COUNT(*) FROM categories) as 'Catégories',
-    (SELECT COUNT(*) FROM specialites) as 'Spécialités',
+    (SELECT COUNT(*) FROM specialties) as 'Spécialités',
     (SELECT COUNT(*) FROM artisans) as 'Artisans';
 
 -- Afficher les artisans en vedette
-SELECT name, company_name, rating, city, is_featured 
+SELECT nom, nom_entreprise, note, ville, est_vedette 
 FROM artisans 
-WHERE is_featured = TRUE;
+WHERE est_vedette = TRUE;
 
 -- Afficher les artisans par catégorie
 SELECT 
-    c.name as 'Catégorie',
-    s.name as 'Spécialité',
-    a.name as 'Artisan',
-    a.city as 'Ville',
-    a.rating as 'Note',
-    CASE WHEN a.is_featured = 1 THEN '⭐ En vedette' ELSE '' END as 'Statut'
+    c.nom as 'Catégorie',
+    s.nom as 'Spécialité',
+    a.nom as 'Artisan',
+    a.ville as 'Ville',
+    a.note as 'Note',
+    CASE WHEN a.est_vedette = 1 THEN '⭐ En vedette' ELSE '' END as 'Statut'
 FROM artisans a
-JOIN specialites s ON a.specialite_id = s.id
+JOIN specialties s ON a.specialite_id = s.id
 JOIN categories c ON s.categorie_id = c.id
-ORDER BY c.name, s.name, a.name;
+ORDER BY c.nom, s.nom, a.nom;
 
 -- Vérification des emails uniques
 SELECT email, COUNT(*) as count 

@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
-    logging: false, // Désactiver les logs SQL en production
+    logging: false,
     pool: {
       max: 5,
       min: 0,
