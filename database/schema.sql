@@ -27,13 +27,13 @@ CREATE TABLE categories (
 -- =============================================
 -- TABLE : SPECIALTIES (spécialités)
 -- =============================================
-CREATE TABLE specialties (
+CREATE TABLE specialites (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    category_id INT NOT NULL,
+    categorie_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+    FOREIGN KEY (categorie_id) REFERENCES categories(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================
@@ -52,11 +52,11 @@ CREATE TABLE artisans (
     rating DECIMAL(2,1) DEFAULT 0 CHECK (rating >= 0 AND rating <= 5),
     description TEXT,
     image_url VARCHAR(255),
-    specialty_id INT NOT NULL,
+    specialite_id INT NOT NULL,
     is_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (specialty_id) REFERENCES specialties(id) ON DELETE CASCADE
+    FOREIGN KEY (specialite_id) REFERENCES specialites(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================
@@ -64,9 +64,9 @@ CREATE TABLE artisans (
 -- =============================================
 CREATE INDEX idx_artisan_name ON artisans(name);
 CREATE INDEX idx_artisan_city ON artisans(city);
-CREATE INDEX idx_artisan_specialty ON artisans(specialty_id);
+CREATE INDEX idx_artisan_specialite ON artisans(specialite_id);
 CREATE INDEX idx_artisan_featured ON artisans(is_featured);
-CREATE INDEX idx_specialty_category ON specialties(category_id);
+CREATE INDEX idx_specialite_categorie ON specialites(categorie_id);
 
 -- =============================================
 -- TABLE : API_USERS (pour sécuriser l'API)
