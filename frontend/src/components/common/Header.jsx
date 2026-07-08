@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, Form, FormControl } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
-import { getCategories } from '../api/artisanApi';
+import { getCategories } from '../../api/artisanApi';
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
