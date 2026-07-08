@@ -1,13 +1,14 @@
 const { models } = require('../models');
 const { Op } = require('sequelize');
-const { validationResult } = require('express-validator');
 
 const { Artisan, Specialite, Categorie } = models;
 
-// Récupérer tous les artisans avec filtres
+// =============================================
+// RÉCUPÉRER TOUS LES ARTISANS
+// =============================================
 exports.getAllArtisans = async (req, res) => {
   try {
-    const { category, specialty, search, featured, city, sort } = req.query;
+    const { categorie, specialite, recherche, vedette, ville, tri } = req.query;
     
     let whereConditions = {};
     let include = [
@@ -22,50 +23,50 @@ exports.getAllArtisans = async (req, res) => {
     ];
     
     // Filtre par recherche (nom de l'artisan)
-    if (search) {
-      whereConditions.name = {
-        [Op.like]: `%${search}%`
+    if (recherche) {
+      whereConditions.nom = {
+        [Op.like]: `%${recherche}%`
       };
     }
     
     // Filtre par catégorie
-    if (category) {
+    if (categorie) {
       include[0].include[0].where = {
-        name: {
-          [Op.like]: `%${category}%`
+        nom: {
+          [Op.like]: `%${categorie}%`
         }
       };
     }
     
     // Filtre par spécialité
-    if (specialty) {
+    if (specialite) {
       include[0].where = {
-        name: {
-          [Op.like]: `%${specialty}%`
+        nom: {
+          [Op.like]: `%${specialite}%`
         }
       };
     }
     
     // Filtre par ville
-    if (city) {
-      whereConditions.city = {
-        [Op.like]: `%${city}%`
+    if (ville) {
+      whereConditions.ville = {
+        [Op.like]: `%${ville}%`
       };
     }
     
     // Filtre artisans en vedette
-    if (featured === 'true') {
-      whereConditions.is_featured = true;
+    if (vedette === 'true') {
+      whereConditions.est_vedette = true;
     }
     
     // Gestion du tri
     let order = [];
-    if (sort === 'rating') {
-      order = [['rating', 'DESC']];
-    } else if (sort === 'name') {
-      order = [['name', 'ASC']];
+    if (tri === 'note') {
+      order = [['note', 'DESC']];
+    } else if (tri === 'nom') {
+      order = [['nom', 'ASC']];
     } else {
-      order = [['rating', 'DESC']];
+      order = [['note', 'DESC']];
     }
     
     const artisans = await Artisan.findAll({
@@ -88,7 +89,9 @@ exports.getAllArtisans = async (req, res) => {
   }
 };
 
-// Récupérer un artisan par ID
+// =============================================
+// RÉCUPÉRER UN ARTISAN PAR ID
+// =============================================
 exports.getArtisanById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -126,12 +129,14 @@ exports.getArtisanById = async (req, res) => {
   }
 };
 
-// Récupérer les artisans en vedette (Top 3)
-exports.getFeaturedArtisans = async (req, res) => {
+// =============================================
+// RÉCUPÉRER LES ARTISANS EN VEDETTE (TOP 3)
+// =============================================
+exports.getArtisansVedette = async (req, res) => {
   try {
     const artisans = await Artisan.findAll({
       where: {
-        is_featured: true
+        est_vedette: true
       },
       include: [
         {
@@ -143,7 +148,7 @@ exports.getFeaturedArtisans = async (req, res) => {
           }]
         }
       ],
-      order: [['rating', 'DESC']],
+      order: [['note', 'DESC']],
       limit: 3
     });
     
@@ -153,7 +158,7 @@ exports.getFeaturedArtisans = async (req, res) => {
       data: artisans
     });
   } catch (error) {
-    console.error('Erreur getFeaturedArtisans:', error);
+    console.error('Erreur getArtisansVedette:', error);
     res.status(500).json({ 
       error: 'Erreur serveur',
       message: error.message 
@@ -161,16 +166,18 @@ exports.getFeaturedArtisans = async (req, res) => {
   }
 };
 
-// Récupérer les catégories avec leurs spécialités pour le menu
-exports.getMenuCategories = async (req, res) => {
+// =============================================
+// RÉCUPÉRER LES CATÉGORIES POUR LE MENU
+// =============================================
+exports.getCategoriesMenu = async (req, res) => {
   try {
     const categories = await Categorie.findAll({
       include: [{
         model: Specialite,
         as: 'specialites',
-        attributes: ['id', 'name']
+        attributes: ['id', 'nom']
       }],
-      attributes: ['id', 'name']
+      attributes: ['id', 'nom']
     });
     
     res.status(200).json({
@@ -178,7 +185,7 @@ exports.getMenuCategories = async (req, res) => {
       data: categories
     });
   } catch (error) {
-    console.error('Erreur getMenuCategories:', error);
+    console.error('Erreur getCategoriesMenu:', error);
     res.status(500).json({ 
       error: 'Erreur serveur',
       message: error.message 
@@ -186,7 +193,9 @@ exports.getMenuCategories = async (req, res) => {
   }
 };
 
-// Récupérer les spécialités par catégorie
+// =============================================
+// RÉCUPÉRER LES SPÉCIALITÉS PAR CATÉGORIE
+// =============================================
 exports.getSpecialitesByCategorie = async (req, res) => {
   try {
     const { categorieId } = req.params;
@@ -198,7 +207,7 @@ exports.getSpecialitesByCategorie = async (req, res) => {
       include: [{
         model: Categorie,
         as: 'categorie',
-        attributes: ['name']
+        attributes: ['nom']
       }]
     });
     
@@ -215,25 +224,27 @@ exports.getSpecialitesByCategorie = async (req, res) => {
   }
 };
 
-// Récupérer toutes les villes distinctes (pour filtres)
-exports.getCities = async (req, res) => {
+// =============================================
+// RÉCUPÉRER TOUTES LES VILLES
+// =============================================
+exports.getVilles = async (req, res) => {
   try {
-    const cities = await Artisan.findAll({
-      attributes: [[Artisan.sequelize.fn('DISTINCT', Artisan.sequelize.col('city')), 'city']],
+    const villes = await Artisan.findAll({
+      attributes: [[Artisan.sequelize.fn('DISTINCT', Artisan.sequelize.col('ville')), 'ville']],
       where: {
-        city: {
+        ville: {
           [Op.ne]: null
         }
       },
-      order: [['city', 'ASC']]
+      order: [['ville', 'ASC']]
     });
     
     res.status(200).json({
       success: true,
-      data: cities.map(c => c.city).filter(c => c)
+      data: villes.map(v => v.ville).filter(v => v)
     });
   } catch (error) {
-    console.error('Erreur getCities:', error);
+    console.error('Erreur getVilles:', error);
     res.status(500).json({ 
       error: 'Erreur serveur',
       message: error.message 

@@ -1,5 +1,5 @@
 -- =============================================
--- BASE DE DONNÉES - TROUVE_TON_ARTISAN
+-- BASE DE DONNÉES - PLATEFORME ARTISANS
 -- RÉGION AUVERGNE RHÔNE-ALPES
 -- =============================================
 
@@ -19,7 +19,7 @@ USE trouve_ton_artisan;
 -- =============================================
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
+    nom VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -27,9 +27,9 @@ CREATE TABLE categories (
 -- =============================================
 -- TABLE : SPECIALTIES (spécialités)
 -- =============================================
-CREATE TABLE specialites (
+CREATE TABLE specialties (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
+    nom VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     categorie_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -41,32 +41,32 @@ CREATE TABLE specialites (
 -- =============================================
 CREATE TABLE artisans (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(200) NOT NULL,
-    company_name VARCHAR(200),
+    nom VARCHAR(200) NOT NULL,
+    nom_entreprise VARCHAR(200),
     email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20),
-    website VARCHAR(255),
-    address VARCHAR(255),
-    city VARCHAR(100),
-    postal_code VARCHAR(10),
-    rating DECIMAL(2,1) DEFAULT 0 CHECK (rating >= 0 AND rating <= 5),
+    telephone VARCHAR(20),
+    site_web VARCHAR(255),
+    adresse VARCHAR(255),
+    ville VARCHAR(100),
+    code_postal VARCHAR(10),
+    note DECIMAL(2,1) DEFAULT 0 CHECK (note >= 0 AND note <= 5),
     description TEXT,
-    image_url VARCHAR(255),
+    url_image VARCHAR(255),
     specialite_id INT NOT NULL,
-    is_featured BOOLEAN DEFAULT FALSE,
+    est_vedette BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (specialite_id) REFERENCES specialites(id) ON DELETE CASCADE
+    FOREIGN KEY (specialite_id) REFERENCES specialties(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =============================================
 -- INDEX pour optimiser les performances
 -- =============================================
-CREATE INDEX idx_artisan_name ON artisans(name);
-CREATE INDEX idx_artisan_city ON artisans(city);
+CREATE INDEX idx_artisan_nom ON artisans(nom);
+CREATE INDEX idx_artisan_ville ON artisans(ville);
 CREATE INDEX idx_artisan_specialite ON artisans(specialite_id);
-CREATE INDEX idx_artisan_featured ON artisans(is_featured);
-CREATE INDEX idx_specialite_categorie ON specialites(categorie_id);
+CREATE INDEX idx_artisan_vedette ON artisans(est_vedette);
+CREATE INDEX idx_specialite_categorie ON specialties(categorie_id);
 
 -- =============================================
 -- TABLE : API_USERS (pour sécuriser l'API)

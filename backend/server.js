@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const path = require('path');
 require('dotenv').config();
 
 const artisanRoutes = require('./src/routes/artisanRoutes');
@@ -18,16 +17,14 @@ const PORT = process.env.PORT || 5002;
 // Helmet pour sécuriser les headers HTTP
 app.use(helmet());
 
-// Limitation du taux de requêtes (Rate Limiting)
+// Limitation du taux de requêtes
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limite de 100 requêtes par fenêtre
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: {
     error: 'Trop de requêtes',
     message: 'Veuillez réessayer dans 15 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false
+  }
 });
 app.use('/api', limiter);
 
@@ -39,7 +36,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
 
-// Middleware pour parser le JSON et les URL encodées
+// Middleware pour parser le JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -47,20 +44,20 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // ROUTES
 // =============================================
 
-// Routes API
-app.use('/api', artisanRoutes);
-
-// Route de santé pour vérifier que l'API fonctionne
+// Route de santé
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
-    message: 'API Trouve ton Artisan - Auvergne Rhône-Alpes',
+    message: 'API Trouve_ton_artisan - Auvergne Rhône-Alpes',
     timestamp: new Date().toISOString()
   });
 });
 
+// Routes API
+app.use('/api', artisanRoutes);
+
 // Route 404 - API
-app.use('/api/*', (req, res) => {
+app.use('/api', (req, res) => {
   res.status(404).json({
     error: 'Route non trouvée',
     message: `La route ${req.originalUrl} n'existe pas`
@@ -74,7 +71,6 @@ app.use('/api/*', (req, res) => {
 app.use((err, req, res, next) => {
   console.error('Erreur:', err.stack);
   
-  // Erreur de validation
   if (err.name === 'SequelizeValidationError') {
     return res.status(400).json({
       error: 'Erreur de validation',
@@ -82,7 +78,6 @@ app.use((err, req, res, next) => {
     });
   }
   
-  // Erreur de base de données
   if (err.name === 'SequelizeDatabaseError') {
     return res.status(500).json({
       error: 'Erreur de base de données',
@@ -102,10 +97,8 @@ app.use((err, req, res, next) => {
 
 const startServer = async () => {
   try {
-    // Initialiser la base de données
     await initDatabase();
     
-    // Démarrer le serveur
     app.listen(PORT, () => {
       console.log('='.repeat(50));
       console.log('🚀 SERVEUR DÉMARRÉ');
@@ -113,7 +106,6 @@ const startServer = async () => {
       console.log(`📡 URL: http://localhost:${PORT}`);
       console.log(`🏥 Health: http://localhost:${PORT}/health`);
       console.log(`📖 API: http://localhost:${PORT}/api`);
-      console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
       console.log('='.repeat(50));
     });
   } catch (error) {
@@ -122,16 +114,4 @@ const startServer = async () => {
   }
 };
 
-// Gestion des signaux d'arrêt
-process.on('SIGTERM', () => {
-  console.log('🛑 Signal SIGTERM reçu, arrêt du serveur...');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  console.log('🛑 Signal SIGINT reçu, arrêt du serveur...');
-  process.exit(0);
-});
-
-// Démarrer le serveur
 startServer();
