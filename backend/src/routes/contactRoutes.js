@@ -7,14 +7,22 @@ require('dotenv').config();
 // Configuration du transporteur Mailtrap
 const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,
-  port: process.env.MAILTRAP_PORT,
+  port: parseInt(process.env.MAILTRAP_PORT),
   auth: {
     user: process.env.MAILTRAP_USER,
     pass: process.env.MAILTRAP_PASSWORD
   }
 });
 
-// Route d'envoi d'email
+// Vérifier la connexion SMTP
+transporter.verify(function(error, success) {
+  if (error) {
+    console.log('❌ Erreur connexion SMTP Mailtrap:', error);
+  } else {
+    console.log('✅ Serveur Mailtrap prêt à envoyer des emails');
+  }
+});
+
 router.post('/contact', authenticateAPI, async (req, res) => {
   try {
     const { artisanNom, artisanEmail, nom, email, objet, message } = req.body;
@@ -29,7 +37,7 @@ router.post('/contact', authenticateAPI, async (req, res) => {
 
     // Construction de l'email
     const mailOptions = {
-      from: process.env.MAIL_FROM,
+      from: process.env.MAIL_FROM || 'contact@trouve-ton-artisan.fr',
       to: artisanEmail,
       subject: `[Trouve ton artisan] Demande de contact - ${artisanNom}`,
       html: `
