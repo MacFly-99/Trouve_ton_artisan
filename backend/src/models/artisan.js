@@ -9,11 +9,7 @@ const Artisan = sequelize.define('Artisan', {
   },
   nom: {
     type: DataTypes.STRING(200),
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [1, 200]
-    }
+    allowNull: false
   },
   nom_entreprise: {
     type: DataTypes.STRING(200),
@@ -22,24 +18,15 @@ const Artisan = sequelize.define('Artisan', {
   email: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true
-    }
+    unique: true
   },
   telephone: {
     type: DataTypes.STRING(20),
-    allowNull: true,
-    validate: {
-      is: /^[0-9+\s\-()]{10,20}$/
-    }
+    allowNull: true
   },
   site_web: {
     type: DataTypes.STRING(255),
-    allowNull: true,
-    validate: {
-      isUrl: true
-    }
+    allowNull: true
   },
   adresse: {
     type: DataTypes.STRING(255),
@@ -55,11 +42,7 @@ const Artisan = sequelize.define('Artisan', {
   },
   note: {
     type: DataTypes.DECIMAL(2, 1),
-    defaultValue: 0,
-    validate: {
-      min: 0,
-      max: 5
-    }
+    defaultValue: 0
   },
   description: {
     type: DataTypes.TEXT,

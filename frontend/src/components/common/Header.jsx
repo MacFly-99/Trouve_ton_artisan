@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Container, Form, FormControl } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { Navbar, Nav, Container } from 'react-bootstrap';
 import { getCategories } from '../../api/artisanApi';
+import SearchBar from './SearchBar';
+import { useScroll } from '../../hooks/useScroll';
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('');
   const navigate = useNavigate();
+  const { isScrolled } = useScroll();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -34,16 +36,22 @@ const Header = () => {
     fetchCategories();
   }, []);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/artisans?recherche=${encodeURIComponent(searchTerm)}`);
-      setSearchTerm('');
-    }
+  // Fonction pour gérer le clic sur une catégorie
+  const handleCategoryClick = (categorieNom) => {
+    console.log(`📂 Clic sur catégorie: "${categorieNom}"`);
+    setActiveCategory(categorieNom);
+    navigate(`/artisans?categorie=${encodeURIComponent(categorieNom)}`);
+  };
+
+  // Fonction pour réinitialiser le filtre (retour à tous les artisans)
+  const handleAllCategories = () => {
+    console.log('📂 Afficher tous les artisans');
+    setActiveCategory('');
+    navigate('/artisans');
   };
 
   return (
-    <header className="header" role="banner">
+    <header className={`header ${isScrolled ? 'header-scrolled' : ''}`} role="banner">
       <a href="#main-content" className="skip-link">
         Passer au contenu principal
       </a>
@@ -53,7 +61,7 @@ const Header = () => {
             <img 
               src="/Logo.png" 
               alt="Trouve ton artisan ! Avec la région Auvergne-Rhône-Alpes" 
-              className="logo"
+              className={`logo ${isScrolled ? 'logo-scrolled' : ''}`}
               onError={(e) => {
                 console.error('❌ Logo non trouvé, utilisation du favicon');
                 e.target.src = '/favicon-32.png';
@@ -66,32 +74,52 @@ const Header = () => {
           <Navbar.Collapse id="main-nav">
             <Nav className="me-auto" role="navigation" aria-label="Navigation principale">
               {loading ? (
-                <span className="nav-link text-muted">Chargement...</span>
+                <span className={`nav-link text-white-50 ${isScrolled ? 'nav-link-scrolled' : ''}`}>
+                  Chargement...
+                </span>
               ) : categories.length > 0 ? (
-                categories.map((categorie) => (
+                <>
+                  {/* Bouton "Tous" pour afficher tous les artisans */}
                   <Nav.Link 
-                    key={categorie.id}
-                    as={NavLink}
-                    to={`/artisans?categorie=${encodeURIComponent(categorie.nom)}`}
+                    onClick={handleAllCategories}
+                    className={`category-link ${!activeCategory ? 'active' : ''} ${isScrolled ? 'category-link-scrolled' : ''}`}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAllCategories();
+                      }
+                    }}
                   >
-                    {categorie.nom}
+                    Tous
                   </Nav.Link>
-                ))
+                  
+                  {/* Boutons pour chaque catégorie */}
+                  {categories.map((categorie) => (
+                    <Nav.Link 
+                      key={categorie.id}
+                      onClick={() => handleCategoryClick(categorie.nom)}
+                      className={`category-link ${activeCategory === categorie.nom ? 'active' : ''} ${isScrolled ? 'category-link-scrolled' : ''}`}
+                      role="button"
+                      tabIndex={0}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleCategoryClick(categorie.nom);
+                        }
+                      }}
+                    >
+                      {categorie.nom}
+                    </Nav.Link>
+                  ))}
+                </>
               ) : (
-                <span className="nav-link text-muted">Aucune catégorie</span>
+                <span className={`nav-link text-white-50 ${isScrolled ? 'nav-link-scrolled' : ''}`}>
+                  Aucune catégorie
+                </span>
               )}
             </Nav>
             
-            <Form className="search-bar" onSubmit={handleSearch} role="search">
-              <FormControl
-                type="search"
-                placeholder="Rechercher un artisan..."
-                aria-label="Rechercher un artisan"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <FaSearch className="search-icon" aria-hidden="true" />
-            </Form>
+            <SearchBar isScrolled={isScrolled} />
           </Navbar.Collapse>
         </Navbar>
       </Container>

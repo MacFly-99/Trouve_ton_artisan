@@ -10,41 +10,46 @@ const Footer = () => {
         <Row>
           <Col lg={4} md={6} className="mb-4 mb-lg-0">
             <img 
-              src="/logo.png" 
+              src="/Logo.png" 
               alt="Trouve ton artisan - Auvergne Rhône-Alpes" 
-              className="footer-logo mb-3"
+              className="footer-logo"
+              onError={(e) => {
+                e.target.src = '/favicon-32.png';
+              }}
             />
-            <p className="text-light opacity-75">
+            <p className="text-white-50">
               Trouvez facilement un artisan dans la région Auvergne-Rhône-Alpes.
             </p>
           </Col>
           
           <Col lg={4} md={6} className="mb-4 mb-lg-0">
-            <h5 className="text-white mb-3">Liens utiles</h5>
+            <h5>Liens utiles</h5>
             <ul className="list-unstyled">
-              <li><Link to="/mentions-legales">Mentions légales</Link></li>
-              <li><Link to="/donnees-personnelles">Données personnelles</Link></li>
-              <li><Link to="/accessibilite">Accessibilité</Link></li>
-              <li><Link to="/cookies">Cookies</Link></li>
+              <li className="mb-2"><Link to="/mentions-legales">Mentions légales</Link></li>
+              <li className="mb-2"><Link to="/donnees-personnelles">Données personnelles</Link></li>
+              <li className="mb-2"><Link to="/accessibilite">Accessibilité</Link></li>
+              <li className="mb-2"><Link to="/cookies">Cookies</Link></li>
             </ul>
           </Col>
           
           <Col lg={4}>
-            <h5 className="text-white mb-3">Contact</h5>
+            <h5>Contact</h5>
             <address className="contact-info">
               <p>
-                <FaMapMarkerAlt className="me-2" aria-hidden="true" />
-                101 cours Charlemagne<br />
-                CS 20033<br />
-                69269 LYON CEDEX 02<br />
-                France
+                <FaMapMarkerAlt aria-hidden="true" />
+                <span>
+                  101 cours Charlemagne<br />
+                  CS 20033<br />
+                  69269 LYON CEDEX 02<br />
+                  France
+                </span>
               </p>
               <p>
-                <FaPhone className="me-2" aria-hidden="true" />
+                <FaPhone aria-hidden="true" />
                 <a href="tel:+33426734000">+33 (0)4 26 73 40 00</a>
               </p>
               <p>
-                <FaEnvelope className="me-2" aria-hidden="true" />
+                <FaEnvelope aria-hidden="true" />
                 <a href="mailto:contact@auvergnerhonealpes.fr">
                   contact@auvergnerhonealpes.fr
                 </a>
@@ -53,10 +58,10 @@ const Footer = () => {
           </Col>
         </Row>
         
-        <hr className="border-light opacity-25 my-4" />
+        <hr />
         
         <Row>
-          <Col className="text-center text-light opacity-75 small">
+          <Col className="text-center copyright">
             &copy; {new Date().getFullYear()} - Région Auvergne-Rhône-Alpes - Tous droits réservés
           </Col>
         </Row>
