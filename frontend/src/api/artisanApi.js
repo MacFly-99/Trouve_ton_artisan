@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
+const API_KEY = process.env.REACT_APP_API_KEY || 'artisan_api_key_2026_secure_token_123456';
+
+console.log('🔑 API URL:', API_URL);
+console.log('🔑 API Key:', API_KEY ? 'Présente' : 'Manquante');
 
 const api = axios.create({
   baseURL: API_URL,
@@ -11,11 +14,26 @@ const api = axios.create({
   }
 });
 
+// Intercepteur pour logger les requêtes
+api.interceptors.request.use(
+  config => {
+    console.log(`📤 Requête ${config.method.toUpperCase()} ${config.url}`);
+    return config;
+  },
+  error => {
+    console.error('❌ Erreur requête:', error);
+    return Promise.reject(error);
+  }
+);
+
 // Intercepteur pour gérer les erreurs
 api.interceptors.response.use(
-  response => response,
+  response => {
+    console.log(`📥 Réponse ${response.config.url}:`, response.status);
+    return response;
+  },
   error => {
-    console.error('Erreur API:', error.response?.data || error.message);
+    console.error('❌ Erreur API:', error.response?.data || error.message);
     return Promise.reject(error);
   }
 );

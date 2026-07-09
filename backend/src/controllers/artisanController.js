@@ -72,8 +72,13 @@ exports.getAllArtisans = async (req, res) => {
     const artisans = await Artisan.findAll({
       where: whereConditions,
       include: include,
-      order: order
-    });
+      order: order,
+      attributes: {
+        include: [
+          [Artisan.sequelize.fn('CAST', Artisan.sequelize.col('note'), 'DECIMAL(2,1)'), 'note']
+        ]
+      }
+});
     
     res.status(200).json({
       success: true,
