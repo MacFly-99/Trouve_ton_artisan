@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom';
 import { FaStar, FaStarHalfAlt, FaRegStar, FaMapMarkerAlt } from 'react-icons/fa';
 
 const ArtisanCard = ({ artisan }) => {
+  // Convertir la note en nombre si c'est une chaîne
+  const rating = typeof artisan.note === 'string' ? parseFloat(artisan.note) : artisan.note;
+  const safeRating = isNaN(rating) ? 0 : rating;
+
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -36,20 +40,23 @@ const ArtisanCard = ({ artisan }) => {
           variant="top" 
           src={artisan.url_image || '/images/default-artisan.jpg'} 
           alt={`${artisan.nom}`}
+          onError={(e) => {
+            e.target.src = '/favicon-32.png';
+          }}
         />
         <Card.Body>
           <Card.Title className="h5">{artisan.nom}</Card.Title>
           
           <div className="mb-2">
-            <span className="rating" aria-label={`Note de ${artisan.note} sur 5`}>
-              {renderStars(artisan.note)}
+            <span className="rating" aria-label={`Note de ${safeRating} sur 5`}>
+              {renderStars(safeRating)}
             </span>
-            <span className="rating-number ms-1">{artisan.note.toFixed(1)}</span>
+            <span className="rating-number ms-1">{safeRating.toFixed(1)}</span>
           </div>
           
           <div className="mb-2">
             <span className="specialty-badge">
-              {artisan.specialite?.nom || 'Spécialité non définie'}
+              {artisan.specialite?.nom || artisan.Specialite?.nom || 'Spécialité non définie'}
             </span>
           </div>
           

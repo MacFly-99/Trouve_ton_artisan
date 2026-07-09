@@ -11,11 +11,20 @@ const FeaturedArtisans = () => {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
+        console.log('📡 Chargement des artisans vedette...');
         const response = await getArtisansVedette();
-        setArtisans(response.data);
+        console.log('✅ Artisans vedette reçus:', response);
+        
+        if (response && response.data) {
+          setArtisans(response.data);
+          console.log(`✅ ${response.data.length} artisans vedette chargés`);
+        } else {
+          console.warn('⚠️ Aucun artisan vedette reçu');
+          setArtisans([]);
+        }
       } catch (err) {
+        console.error('❌ Erreur chargement artisans vedette:', err);
         setError('Erreur lors du chargement des artisans en vedette');
-        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -36,6 +45,14 @@ const FeaturedArtisans = () => {
     return (
       <Container className="text-center py-5">
         <p className="text-danger">{error}</p>
+      </Container>
+    );
+  }
+
+  if (artisans.length === 0) {
+    return (
+      <Container className="text-center py-5">
+        <p className="text-secondary">Aucun artisan en vedette pour le moment.</p>
       </Container>
     );
   }

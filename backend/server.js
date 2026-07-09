@@ -5,17 +5,39 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const artisanRoutes = require('./src/routes/artisanRoutes');
+const contactRoutes = require('./src/routes/contactRoutes');
 const { initDatabase } = require('./src/models');
 
 const app = express();
 const PORT = process.env.PORT || 5002;
 
 // =============================================
+// CONFIGURATION CORS - CORRIGÉE
+// =============================================
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+    'http://127.0.0.1:3002'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
+};
+
+app.use(cors(corsOptions));
+
+// =============================================
 // CONFIGURATION DE LA SÉCURITÉ
 // =============================================
 
 // Helmet pour sécuriser les headers HTTP
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
 // Limitation du taux de requêtes
 const limiter = rateLimit({
@@ -28,17 +50,22 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Configuration CORS
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
-}));
-
 // Middleware pour parser le JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Middleware pour ajouter les headers CORS à toutes les réponses
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-api-key');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 
 // =============================================
 // ROUTES
@@ -48,7 +75,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
-    message: 'API Trouve_ton_artisan - Auvergne Rhône-Alpes',
+    message: 'API Artisan Platform - Auvergne Rhône-Alpes',
     timestamp: new Date().toISOString()
   });
 });
@@ -107,6 +134,8 @@ const startServer = async () => {
       console.log(`📡 URL: http://localhost:${PORT}`);
       console.log(`🏥 Health: http://localhost:${PORT}/health`);
       console.log(`📖 API: http://localhost:${PORT}/api`);
+      console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔗 CORS autorisés: http://localhost:3000, http://localhost:3001, http://localhost:3002`);
       console.log('='.repeat(50));
     });
   } catch (error) {

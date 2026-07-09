@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { FaStar, FaStarHalfAlt, FaRegStar, FaMapMarkerAlt, FaGlobe } from 'react-icons/fa';
 import { getArtisanById } from '../../api/artisanApi';
@@ -28,9 +28,13 @@ const ArtisanDetail = () => {
   }, [id]);
 
   const renderStars = (rating) => {
+    // Convertir en nombre si nécessaire
+    const safeRating = typeof rating === 'string' ? parseFloat(rating) : rating;
+    const finalRating = isNaN(safeRating) ? 0 : safeRating;
+    
     const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
+    const fullStars = Math.floor(finalRating);
+    const hasHalfStar = finalRating % 1 >= 0.5;
     
     for (let i = 0; i < fullStars; i++) {
       stars.push(<FaStar key={`full-${i}`} className="text-warning" />);
@@ -66,6 +70,10 @@ const ArtisanDetail = () => {
     );
   }
 
+  // Récupérer la note en toute sécurité
+  const rating = typeof artisan.note === 'string' ? parseFloat(artisan.note) : artisan.note;
+  const safeRating = isNaN(rating) ? 0 : rating;
+
   return (
     <>
       <Helmet>
@@ -90,6 +98,9 @@ const ArtisanDetail = () => {
                   src={artisan.url_image || '/images/default-artisan.jpg'} 
                   alt={`${artisan.nom}`}
                   className="artisan-image"
+                  onError={(e) => {
+                    e.target.src = '/favicon-32.png';
+                  }}
                 />
               </Col>
               <Col lg={8}>
@@ -99,15 +110,15 @@ const ArtisanDetail = () => {
                 )}
                 
                 <div className="mb-3">
-                  <span className="rating" aria-label={`Note de ${artisan.note} sur 5`}>
-                    {renderStars(artisan.note)}
+                  <span className="rating" aria-label={`Note de ${safeRating} sur 5`}>
+                    {renderStars(safeRating)}
                   </span>
-                  <span className="rating-number ms-1 fw-bold">{artisan.note.toFixed(1)}</span>
+                  <span className="rating-number ms-1 fw-bold">{safeRating.toFixed(1)}</span>
                 </div>
                 
                 <div className="mb-2">
                   <span className="specialty-badge bg-primary text-white px-3 py-2 rounded-pill">
-                    {artisan.specialite?.nom || 'Spécialité non définie'}
+                    {artisan.specialite?.nom || artisan.Specialite?.nom || 'Spécialité non définie'}
                   </span>
                   {artisan.specialite?.categorie && (
                     <span className="ms-2 text-secondary">

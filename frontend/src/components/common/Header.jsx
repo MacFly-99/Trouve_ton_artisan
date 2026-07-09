@@ -6,16 +6,29 @@ import { getCategories } from '../../api/artisanApi';
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        console.log('📡 Chargement des catégories...');
         const response = await getCategories();
-        setCategories(response.data);
+        console.log('✅ Catégories reçues:', response);
+        
+        if (response && response.data) {
+          setCategories(response.data);
+          console.log(`✅ ${response.data.length} catégories chargées`);
+        } else {
+          console.warn('⚠️ Aucune catégorie reçue');
+          setCategories([]);
+        }
       } catch (error) {
-        console.error('Erreur chargement catégories:', error);
+        console.error('❌ Erreur chargement catégories:', error);
+        setCategories([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCategories();
@@ -38,9 +51,13 @@ const Header = () => {
         <Navbar expand="lg" className="p-0">
           <Navbar.Brand as={Link} to="/" aria-label="Accueil - Trouve ton artisan">
             <img 
-              src="/logo.png" 
+              src="/Logo.png" 
               alt="Trouve ton artisan ! Avec la région Auvergne-Rhône-Alpes" 
               className="logo"
+              onError={(e) => {
+                console.error('❌ Logo non trouvé, utilisation du favicon');
+                e.target.src = '/favicon-32.png';
+              }}
             />
           </Navbar.Brand>
           
@@ -48,15 +65,21 @@ const Header = () => {
           
           <Navbar.Collapse id="main-nav">
             <Nav className="me-auto" role="navigation" aria-label="Navigation principale">
-              {categories.map(categorie => (
-                <Nav.Link 
-                  key={categorie.id}
-                  as={NavLink}
-                  to={`/artisans?categorie=${encodeURIComponent(categorie.nom)}`}
-                >
-                  {categorie.nom}
-                </Nav.Link>
-              ))}
+              {loading ? (
+                <span className="nav-link text-muted">Chargement...</span>
+              ) : categories.length > 0 ? (
+                categories.map((categorie) => (
+                  <Nav.Link 
+                    key={categorie.id}
+                    as={NavLink}
+                    to={`/artisans?categorie=${encodeURIComponent(categorie.nom)}`}
+                  >
+                    {categorie.nom}
+                  </Nav.Link>
+                ))
+              ) : (
+                <span className="nav-link text-muted">Aucune catégorie</span>
+              )}
             </Nav>
             
             <Form className="search-bar" onSubmit={handleSearch} role="search">

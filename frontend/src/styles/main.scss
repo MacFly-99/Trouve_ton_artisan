@@ -1,5 +1,6 @@
-@import 'variables';
-@import '~bootstrap/scss/bootstrap';
+// Remplacer @import par @use
+@use 'variables' as *;
+@use '~bootstrap/scss/bootstrap' as *;
 
 // Reset et styles de base
 * {
