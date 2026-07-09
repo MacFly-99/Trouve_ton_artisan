@@ -11,13 +11,15 @@ const api = axios.create({
   headers: {
     'x-api-key': API_KEY,
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 10000
 });
 
 // Intercepteur pour logger les requêtes
 api.interceptors.request.use(
   config => {
     console.log(`📤 Requête ${config.method.toUpperCase()} ${config.url}`);
+    console.log('📤 Headers:', config.headers);
     return config;
   },
   error => {
@@ -34,6 +36,9 @@ api.interceptors.response.use(
   },
   error => {
     console.error('❌ Erreur API:', error.response?.data || error.message);
+    if (error.response?.status === 401) {
+      console.error('🔑 Erreur 401: Clé API invalide ou manquante');
+    }
     return Promise.reject(error);
   }
 );

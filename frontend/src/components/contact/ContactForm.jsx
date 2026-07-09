@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
-import axios from 'axios';
+import api from '../../api/artisanApi';
 
 const ContactForm = ({ artisan }) => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,6 @@ const ContactForm = ({ artisan }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
     if (!formData.nom || !formData.email || !formData.message) {
       setError('Veuillez remplir tous les champs obligatoires.');
       return;
@@ -31,8 +30,8 @@ const ContactForm = ({ artisan }) => {
     setError(null);
 
     try {
-      // Envoyer l'email via l'API backend
-      await axios.post('http://localhost:5002/api/contact', {
+      // Utiliser l'API configurée avec la clé API
+      const response = await api.post('/contact', {
         artisanId: artisan.id,
         artisanNom: artisan.nom,
         artisanEmail: artisan.email,
@@ -42,6 +41,7 @@ const ContactForm = ({ artisan }) => {
         message: formData.message
       });
 
+      console.log('✅ Email envoyé:', response.data);
       setSubmitted(true);
       setFormData({
         nom: '',
@@ -50,8 +50,12 @@ const ContactForm = ({ artisan }) => {
         message: ''
       });
     } catch (err) {
-      setError('Erreur lors de l\'envoi du message. Veuillez réessayer.');
-      console.error('Erreur envoi email:', err);
+      console.error('❌ Erreur envoi email:', err);
+      if (err.response?.status === 401) {
+        setError('Erreur d\'authentification. Veuillez vérifier la configuration de l\'API.');
+      } else {
+        setError('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+      }
     } finally {
       setLoading(false);
     }
