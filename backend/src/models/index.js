@@ -1,7 +1,7 @@
 const sequelize = require('../config/database');
-const Categorie = require('./Categorie');
-const Specialite = require('./Specialite');
-const Artisan = require('./Artisan');
+const Categorie = require('./categorie');
+const Specialite = require('./specialite');
+const Artisan = require('./artisan');
 
 // =============================================
 // DÉFINITION DES ASSOCIATIONS
