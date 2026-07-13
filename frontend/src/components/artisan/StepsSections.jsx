@@ -28,12 +28,15 @@ const StepsSection = () => {
   return (
     <section className="steps-section" aria-labelledby="steps-title">
       <Container>
+        {/* Barre de séparation rouge */}
+        <div className="section-divider"></div>
+        
         <h2 id="steps-title" className="text-center mb-5 display-5 fw-bold text-primary-dark">
           Comment trouver mon artisan ?
         </h2>
-        <Row>
+        <Row className="g-4">
           {steps.map((step) => (
-            <Col key={step.number} lg={3} md={6} className="mb-4">
+            <Col key={step.number} lg={3} md={6}>
               <div className="step-card">
                 <div className="step-number" aria-hidden="true">
                   {step.number}

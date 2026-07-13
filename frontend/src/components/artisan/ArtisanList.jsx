@@ -131,8 +131,8 @@ const ArtisanList = () => {
       </Helmet>
       
       <Container className="py-4">
-        <h1 className="mb-4 text-primary-dark">Nos artisans</h1>
-        
+        <h1 className="mb-4" style={{ color: '#00497c' }}>Nos artisans</h1>
+
         {/* Filtres rapides par catégorie */}
         <div className="mb-4">
           <span className="text-secondary me-2">Filtrer par catégorie :</span>

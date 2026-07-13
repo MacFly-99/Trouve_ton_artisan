@@ -28,7 +28,6 @@ const ArtisanDetail = () => {
   }, [id]);
 
   const renderStars = (rating) => {
-    // Convertir en nombre si nécessaire
     const safeRating = typeof rating === 'string' ? parseFloat(rating) : rating;
     const finalRating = isNaN(safeRating) ? 0 : safeRating;
     
@@ -70,7 +69,6 @@ const ArtisanDetail = () => {
     );
   }
 
-  // Récupérer la note en toute sécurité
   const rating = typeof artisan.note === 'string' ? parseFloat(artisan.note) : artisan.note;
   const safeRating = isNaN(rating) ? 0 : rating;
 
@@ -118,7 +116,7 @@ const ArtisanDetail = () => {
                 
                 <div className="mb-2">
                   <span className="specialty-badge bg-primary text-white px-3 py-2 rounded-pill">
-                    {artisan.specialite?.nom || artisan.Specialite?.nom || 'Spécialité non définie'}
+                    {artisan.specialite?.nom || 'Spécialité non définie'}
                   </span>
                   {artisan.specialite?.categorie && (
                     <span className="ms-2 text-secondary">
@@ -161,15 +159,32 @@ const ArtisanDetail = () => {
           </div>
           
           <Row>
-            <Col lg={6} className="mb-4">
-              <h3 className="text-primary-dark">À propos</h3>
-              <p className="text-secondary">
-                {artisan.description || 'Aucune description disponible.'}
-              </p>
+            {/* Section "À propos" - SUR TOUTE LA LARGEUR */}
+            <Col lg={12} className="mb-4">
+              <div className="about-section">
+                <h3 className="text-primary-dark mb-3">À propos</h3>
+                <div className="about-content">
+                  {artisan.description ? (
+                    <p className="text-secondary fs-6" style={{ lineHeight: '1.8' }}>
+                      {artisan.description}
+                    </p>
+                  ) : (
+                    <p className="text-secondary fst-italic">
+                      Cet artisan n'a pas encore rédigé sa description.
+                    </p>
+                  )}
+                </div>
+              </div>
             </Col>
-            <Col lg={6}>
-              <h3 className="text-primary-dark">Contacter l'artisan</h3>
-              <ContactForm artisan={artisan} />
+          </Row>
+
+          <Row>
+            {/* Formulaire de contact - SUR TOUTE LA LARGEUR */}
+            <Col lg={12}>
+              <div className="contact-section">
+                <h3 className="text-primary-dark mb-3">Contacter l'artisan</h3>
+                <ContactForm artisan={artisan} />
+              </div>
             </Col>
           </Row>
         </Container>

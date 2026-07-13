@@ -13,13 +13,10 @@ const FeaturedArtisans = () => {
       try {
         console.log('📡 Chargement des artisans vedette...');
         const response = await getArtisansVedette();
-        console.log('✅ Artisans vedette reçus:', response);
-        
         if (response && response.data) {
           setArtisans(response.data);
           console.log(`✅ ${response.data.length} artisans vedette chargés`);
         } else {
-          console.warn('⚠️ Aucun artisan vedette reçu');
           setArtisans([]);
         }
       } catch (err) {
@@ -58,8 +55,11 @@ const FeaturedArtisans = () => {
   }
 
   return (
-    <section className="py-5" aria-labelledby="featured-title">
+    <section className="featured-section" aria-labelledby="featured-title">
       <Container>
+        {/* Barre de séparation rouge */}
+        <div className="section-divider"></div>
+        
         <h2 id="featured-title" className="text-center mb-4 display-5 fw-bold text-primary-dark">
           Les artisans du mois
         </h2>
