@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form, FormControl, Button } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 
-const SearchBar = ({ isScrolled }) => {
+const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ const SearchBar = ({ isScrolled }) => {
   };
 
   return (
-    <Form className={`search-bar ${isScrolled ? 'search-bar-scrolled' : ''}`} onSubmit={handleSearch} role="search">
+    <Form className="search-bar" onSubmit={handleSearch} role="search">
       <FormControl
         type="search"
         placeholder="Rechercher un artisan..."
@@ -36,12 +36,12 @@ const SearchBar = ({ isScrolled }) => {
         value={searchTerm}
         onChange={handleChange}
         onKeyPress={handleKeyPress}
-        className={`search-input ${isScrolled ? 'search-input-scrolled' : ''}`}
+        className="search-input"
       />
       <Button 
         type="submit" 
         variant="link" 
-        className={`search-button ${isScrolled ? 'search-button-scrolled' : ''}`}
+        className="search-button"
         aria-label="Lancer la recherche"
       >
         <FaSearch />

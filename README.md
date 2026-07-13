@@ -119,7 +119,7 @@ ARTISANS (id, nom, nom_entreprise, email, telephone, site_web, adresse, ville, c
 2. Cloner le projet
 
 ```bash
-git clone https://github.com/MacFly-99/Trouve_ton_artisan
+git clone https://github.com/MacFly-99/Trouve_ton_artisan.git
 cd trouve_ton_artisan
 
 
@@ -215,11 +215,11 @@ trouve_ton_artisan/
 │   │   │   │   ├── ArtisanDetail.jsx
 │   │   │   │   ├── ArtisanList.jsx
 │   │   │   │   └── FeaturedArtisans.jsx
+│   │   │   │   └── StepsSections.jsx
 │   │   │   ├── common/
 │   │   │   │   ├── Footer.jsx
 │   │   │   │   ├── Header.jsx
-│   │   │   │   ├── SearchBar.jsx
-│   │   │   │   └── StepsSection.jsx
+│   │   │   │   ├── SearchBar.jsx  
 │   │   │   ├── contact/
 │   │   │   │   └── ContactForm.jsx
 │   │   │   └── pages/
