@@ -4,7 +4,6 @@
 [![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18.16.0-green)](https://nodejs.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange)](https://mysql.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ---
 
@@ -31,14 +30,15 @@ Cette plateforme a pour objectif de **mettre en relation** les particuliers avec
 
 | Fonctionnalité | Description |
 |----------------|-------------|
-| 🔍 **Recherche** | Barre de recherche par nom d'artisan |
+| 🔍 **Recherche** | Barre de recherche par nom d'artisan avec icône intégrée |
 | 📂 **Catégories** | Navigation par catégories (Alimentation, Bâtiment, Fabrication, Services) |
 | 🏙️ **Filtres** | Filtrage par ville et tri par note |
-| ⭐ **Artisans vedette** | Mise en avant des 3 meilleurs artisans |
-| 📄 **Fiche artisan** | Détail complet : note, spécialité, localisation, description |
+| ⭐ **Artisans vedette** | Mise en avant des 3 meilleurs artisans (page d'accueil) |
+| 📄 **Fiche artisan** | Détail complet : note, spécialité, localisation, description "À propos" |
 | ✉️ **Contact** | Formulaire de contact avec envoi d'email via Mailtrap |
 | ♿ **Accessibilité** | Conforme aux normes WCAG 2.1 (focus visible, contrastes, skip link) |
 | 📱 **Responsive** | Mobile-first, adapté à tous les écrans |
+| 🎨 **Identité visuelle** | Respect de la charte graphique de la Région (couleurs, police Graphik) |
 
 ---
 
@@ -65,6 +65,24 @@ Cette plateforme a pour objectif de **mettre en relation** les particuliers avec
 | Nodemailer | 6.9.0 | Envoi d'emails |
 | Helmet | 7.0.0 | Sécurité des headers |
 | CORS | 2.8.5 | Gestion des accès cross-origin |
+
+---
+
+## 🎨 Identité graphique
+
+### Palette de couleurs (brief)
+| Code | Utilisation |
+|------|-------------|
+| `#f1f8fc` | Fond uniforme du site |
+| `#0074c7` | Liens, boutons, accents |
+| `#00497c` | Titres, footer |
+| `#384050` | Texte courant |
+| `#cd2c2e` | Barres de séparation |
+| `#82b864` | Badges succès |
+
+### Typographie
+- **Police** : Graphik (téléchargée dans le brief)
+- **Fallback** : Inter, sans-serif
 
 ---
 
@@ -181,6 +199,7 @@ Health Check	http://localhost:5002/health
 
 
 📁 Structure du projet
+
 trouve_ton_artisan/
 ├── backend/
 │   ├── src/
@@ -192,9 +211,9 @@ trouve_ton_artisan/
 │   │   │   └── auth.js
 │   │   ├── models/
 │   │   │   ├── index.js
-│   │   │   ├── categorie.js
-│   │   │   ├── specialite.js
-│   │   │   └── artisan.js
+│   │   │   ├── Categorie.js
+│   │   │   ├── Specialite.js
+│   │   │   └── Artisan.js
 │   │   └── routes/
 │   │       ├── artisanRoutes.js
 │   │       └── contactRoutes.js
@@ -203,6 +222,9 @@ trouve_ton_artisan/
 │   └── server.js
 ├── frontend/
 │   ├── public/
+│   │   ├── fonts/
+│   │   │   ├── graphik.css
+│   │   │   └── Graphik-*.otf
 │   │   ├── favicon.png
 │   │   ├── Logo.png
 │   │   └── index.html
@@ -215,18 +237,17 @@ trouve_ton_artisan/
 │   │   │   │   ├── ArtisanDetail.jsx
 │   │   │   │   ├── ArtisanList.jsx
 │   │   │   │   └── FeaturedArtisans.jsx
-│   │   │   │   └── StepsSections.jsx
+│   │   │   │   ├── StepsSections.jsx
 │   │   │   ├── common/
 │   │   │   │   ├── Footer.jsx
 │   │   │   │   ├── Header.jsx
-│   │   │   │   ├── SearchBar.jsx  
+│   │   │   │   ├── ScrollToTop.jsx
+│   │   │   │   └── SearchBar.jsx
 │   │   │   ├── contact/
 │   │   │   │   └── ContactForm.jsx
 │   │   │   └── pages/
 │   │   │       ├── HomePage.jsx
 │   │   │       └── NotFound.jsx
-│   │   ├── hooks/
-│   │   │   └── useScroll.js
 │   │   ├── styles/
 │   │   │   ├── main.scss
 │   │   │   └── variables.scss
@@ -237,12 +258,8 @@ trouve_ton_artisan/
 ├── database/
 │   ├── schema.sql
 │   └── datas.sql
-├── docs/
-│   ├── MCD_MLD.png
-│   └── maquettes_figma/
 ├── .gitignore
 └── README.md
-
 
 🔒 Sécurité
 Mesure	                    Implémentation	             Description

@@ -69,7 +69,7 @@ const Footer = () => {
         
         <Row>
           <Col className="text-center footer-copyright">
-            &copy; {new Date().getFullYear()} - Région Auvergne-Rhône-Alpes - Tous droits réservés
+            &copy; {new Date().getFullYear()} - Trouve ton artisan Région Auvergne-Rhône-Alpes - Tous droits réservés
           </Col>
         </Row>
       </Container>
