@@ -159,7 +159,7 @@ const ArtisanDetail = () => {
           </div>
           
           <Row>
-            {/* Section "À propos" - SUR TOUTE LA LARGEUR */}
+            {/* Section "À propos" */}
             <Col lg={12} className="mb-4">
               <div className="about-section">
                 <h3 className="text-primary-dark mb-3">À propos</h3>
@@ -179,7 +179,7 @@ const ArtisanDetail = () => {
           </Row>
 
           <Row>
-            {/* Formulaire de contact - SUR TOUTE LA LARGEUR */}
+            {/* Formulaire de contact */}
             <Col lg={12}>
               <div className="contact-section">
                 <h3 className="text-primary-dark mb-3">Contacter l'artisan</h3>

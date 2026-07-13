@@ -96,7 +96,7 @@ a {
 .section-divider {
   width: 80px;
   height: 4px;
-  background-color: $color-accent; // #cd2c2e
+  background-color: $color-accent;
   border-radius: 2px;
   margin: 0 auto 30px auto;
 }
@@ -303,7 +303,7 @@ a {
 }
 
 // =============================================
-// STEPS SECTION
+// STEPS SECTIONS
 // =============================================
 
 .steps-section {
@@ -465,7 +465,7 @@ a {
       left: 0;
       width: 30px;
       height: 2px;
-      background-color: $color-accent; // #cd2c2e
+      background-color: $color-accent;
     }
   }
   

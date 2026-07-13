@@ -13,7 +13,7 @@ const HomePage = () => {
       </Helmet>
       
       <main id="main-content">
-        {/* Section Hero avec marge pour ne pas être cachée par le header */}
+        {/* Section Hero */}
         <section className="hero-section" aria-label="Présentation">
           <Container className="py-5">
             <Row className="justify-content-center text-center">
@@ -22,7 +22,7 @@ const HomePage = () => {
                 Trouvez l'artisan qu'il vous faut
               </h1>
                 <p className="lead text-secondary fs-4">
-                  Plus de 17 artisans qualifiés dans toute la région Auvergne-Rhône-Alpes
+                  Plus de 15 artisans qualifiés dans toute la région Auvergne-Rhône-Alpes
                 </p>
                 <div className="d-flex flex-wrap justify-content-center gap-3 mt-4">
                   <span className="badge-region badge-blue">
