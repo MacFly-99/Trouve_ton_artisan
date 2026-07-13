@@ -12,8 +12,9 @@ const app = express();
 const PORT = process.env.PORT || 5002;
 
 // =============================================
-// CONFIGURATION CORS - CORRIGÉE
+// CONFIGURATION CORS
 // =============================================
+
 const corsOptions = {
   origin: [
     'http://localhost:3000',
@@ -49,24 +50,12 @@ const limiter = rateLimit({
     message: 'Veuillez réessayer dans 15 minutes'
   }
 });
+
 app.use('/api', limiter);
 
 // Middleware pour parser le JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Middleware pour ajouter les headers CORS à toutes les réponses
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-api-key');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
 
 // =============================================
 // ROUTES
@@ -99,21 +88,21 @@ app.use('/api', (req, res) => {
 
 app.use((err, req, res, next) => {
   console.error('Erreur:', err.stack);
-  
+
   if (err.name === 'SequelizeValidationError') {
     return res.status(400).json({
       error: 'Erreur de validation',
       details: err.errors.map(e => e.message)
     });
   }
-  
+
   if (err.name === 'SequelizeDatabaseError') {
     return res.status(500).json({
       error: 'Erreur de base de données',
       message: 'Une erreur est survenue lors de l\'accès à la base de données'
     });
   }
-  
+
   res.status(500).json({
     error: 'Erreur serveur',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Une erreur est survenue'
@@ -127,7 +116,7 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     await initDatabase();
-    
+
     app.listen(PORT, () => {
       console.log('='.repeat(50));
       console.log('🚀 SERVEUR DÉMARRÉ');
@@ -136,7 +125,6 @@ const startServer = async () => {
       console.log(`🏥 Health: http://localhost:${PORT}/health`);
       console.log(`📖 API: http://localhost:${PORT}/api`);
       console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`🔗 CORS autorisés: http://localhost:3000, http://localhost:3001, http://localhost:3002`);
       console.log('='.repeat(50));
     });
   } catch (error) {
