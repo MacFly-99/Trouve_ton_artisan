@@ -1,9 +1,10 @@
 # 🛠️ Trouve ton artisan - Région Auvergne-Rhône-Alpes
 
-[![Status](https://img.shields.io/badge/status-completed-success)](https://github.com/)
+[![Status](https://img.shields.io/badge/status-completed-success)](https://github.com/MacFly-99/Trouve_ton_artisan)
 [![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18.16.0-green)](https://nodejs.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange)](https://mysql.com/)
+[![Render](https://img.shields.io/badge/Render-Deployed-purple)](https://render.com)
 
 ---
 
@@ -16,6 +17,16 @@ Elle permet aux particuliers de :
 - ⭐ **Consulter** les notes et avis des artisans
 - 📧 **Contacter** facilement un artisan via un formulaire de contact
 - 📱 **Accéder** au site sur tous les supports (mobile, tablette, desktop)
+
+---
+
+## 🌐 Accès en ligne
+
+| Service | URL |
+|---------|-----|
+| **Site (Frontend)** | [https://trouve-ton-artisan-frontend-uoyw.onrender.com](https://trouve-ton-artisan-frontend-uoyw.onrender.com) |
+| **API (Backend)** | [https://trouve-ton-artisan-backend-k4y0.onrender.com](https://trouve-ton-artisan-backend-k4y0.onrender.com) |
+| **Health Check** | [https://trouve-ton-artisan-backend-k4y0.onrender.com/health](https://trouve-ton-artisan-backend-k4y0.onrender.com/health) |
 
 ---
 
@@ -65,6 +76,13 @@ Cette plateforme a pour objectif de **mettre en relation** les particuliers avec
 | Nodemailer | 6.9.0 | Envoi d'emails |
 | Helmet | 7.0.0 | Sécurité des headers |
 | CORS | 2.8.5 | Gestion des accès cross-origin |
+
+### Hébergement
+| Service | Utilisation |
+|---------|-------------|
+| **Render** | Frontend + Backend |
+| **Aiven** | Base de données MySQL |
+| **Mailtrap** | Emails de test |
 
 ---
 
@@ -189,13 +207,6 @@ cp .env.example .env
 
 # Démarrer l'application
 npm start
-
-
-🌐 Accès
-Service	        URL
-Frontend	    http://localhost:3002
-API Backend	    http://localhost:5002
-Health Check	http://localhost:5002/health
 
 
 📁 Structure du projet
