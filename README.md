@@ -208,7 +208,6 @@ cp .env.example .env
 # Démarrer l'application
 npm start
 
-
 📁 Structure du projet
 
 trouve_ton_artisan/
